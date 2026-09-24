@@ -10,7 +10,13 @@ public class Solicitud {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     private String titulo;
-    private String estado; // CREADA, ASIGNADA, EN_PROCESO, RESUELTA, CERRADA
+    private String descripcion;
+    private String categoria;
+    private String prioridad;
+    private String usuarioSolicitante; 
+    private String estado; 
+    
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 }

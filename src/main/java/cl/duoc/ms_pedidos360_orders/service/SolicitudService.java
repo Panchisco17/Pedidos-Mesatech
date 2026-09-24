@@ -23,6 +23,10 @@ public class SolicitudService {
     }
 
     public Solicitud crearSolicitud(Solicitud solicitud) {
+        // Aseguramos el inicio del flujo según la rúbrica
+        if (solicitud.getEstado() == null || solicitud.getEstado().isEmpty() || "PENDIENTE".equalsIgnoreCase(solicitud.getEstado())) {
+            solicitud.setEstado("CREADA");
+        }
         return repository.save(solicitud);
     }
 
@@ -38,7 +42,19 @@ public class SolicitudService {
 
     public Solicitud actualizarEstado(Long id, String nuevoEstado) {
         Solicitud existente = obtenerPorId(id);
-        existente.setEstado(nuevoEstado); 
+        String estadoActual = existente.getEstado();
+        String estadoLimpio = nuevoEstado.trim().toUpperCase();
+
+        // Regla de negocio obligatoria: No pasar a RESUELTA si no está EN_PROCESO
+        if ("RESUELTA".equals(estadoLimpio) && !"EN_PROCESO".equals(estadoActual)) {
+            throw new IllegalStateException("Regla de negocio: Una solicitud no puede pasar a RESUELTA si antes no se encuentra EN_PROCESO.");
+        }
+
+        existente.setEstado(estadoLimpio); 
         return repository.save(existente);
+    }
+
+    public List<Solicitud> obtenerPorUsuario(String usuarioSolicitante) {
+        return repository.findByUsuarioSolicitante(usuarioSolicitante);
     }
 }

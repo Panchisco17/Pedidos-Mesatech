@@ -5,6 +5,7 @@ import cl.duoc.ms_pedidos360_orders.service.SolicitudService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+
 @RestController
 public class SolicitudController {
     
@@ -22,6 +23,11 @@ public class SolicitudController {
     @GetMapping("/v1/solicitudes/{id}")
     public Solicitud obtenerSolicitudPorId(@PathVariable Long id) {
         return service.obtenerPorId(id);
+    }
+
+    @GetMapping("/v1/solicitudes/usuario/{email}")
+    public List<Solicitud> listarSolicitudesPorUsuario(@PathVariable String email) {
+        return service.obtenerPorUsuario(email);
     }
 
     @PostMapping("/v1/solicitudes")
